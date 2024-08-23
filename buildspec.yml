@@ -5,14 +5,14 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/z3c5c0s2
-      - REPOSITORY_URI=public.ecr.aws/z3c5c0s2/hsecr
+      - REPOSITORY_URI=public.ecr.aws/z3c5c0s2/msecr
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t hsecr .
-      - docker tag hsecr:latest $REPOSITORY_URI:latest
+      - docker build -t msecr .
+      - docker tag msecr:latest $REPOSITORY_URI:latest
   post_build:
     commands:
       - echo Build completed on `date`
@@ -20,6 +20,6 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"hsecr","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"msecr","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
